@@ -1,4 +1,4 @@
-import { default as $ } from "https://www.tsujio.org/gamelib-js/gamelib.v1.js";
+import { default as $ } from "../gamelib-js/gamelib.js";
 
 const SCREEN_WIDTH = 640;
 const SCREEN_HEIGHT = 480;
@@ -251,7 +251,7 @@ function GamePlay({ game, demo }) {
     ctx.rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     ctx.arc(this.bat.x, this.bat.y, 50, 0, Math.PI * 2);
     ctx.clip("evenodd");
-    ctx.fillStyle = "rgba(0, 0, 0, 0.95)";
+    ctx.fillStyle = "rgba(0, 0, 0)";
     ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     ctx.restore();
   };
@@ -313,14 +313,14 @@ const game = new $.Game({
 $.register({
   game,
   audios: {
-    gameStart: new URL("resources/魔王魂 効果音 システム49.mp3", self.location.href),
-    gameOver: new URL("resources/魔王魂 効果音 システム32.mp3", self.location.href),
-    flap: new URL("resources/maou_se_sound17.mp3", self.location.href),
-    gain: new URL("resources/魔王魂 効果音 物音15.mp3", self.location.href),
-    ranking: new URL("resources/魔王魂 効果音 システム46.mp3", self.location.href),
+    gameStart: "resources/魔王魂 効果音 システム49.mp3",
+    gameOver: "resources/魔王魂 効果音 システム32.mp3",
+    flap: "resources/maou_se_sound17.mp3",
+    gain: "resources/魔王魂 効果音 物音15.mp3",
+    ranking: "resources/魔王魂 効果音 システム46.mp3",
   },
-  font: new URL("resources/PressStart2P-Regular.ttf", self.location.href).href,
-  image: new URL("resources/echolocation.png", self.location.href),
+  font: "resources/PressStart2P-Regular.ttf",
+  image: "resources/echolocation.png",
   key: ((r) =>
     Array(32)
       .fill(0)
