@@ -257,6 +257,7 @@ function GamePlay({ game, demo }) {
   };
 
   this.draw = function (ctx) {
+    $.drawRect(ctx, { x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT, origin: "topLeft", color: "white" });
     this.bat.draw(ctx);
     this.enemies.forEach((e) => e.draw(ctx));
     drawDarkness(ctx);
