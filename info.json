@@ -1,0 +1,10 @@
+{
+  "title": "Echolocation",
+  "year": 2026,
+  "description": [],
+  "screen": {
+    "width": 640,
+    "height": 480
+  },
+  "language": "javascript"
+}
