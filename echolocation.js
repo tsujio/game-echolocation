@@ -1,4 +1,6 @@
-import { default as $ } from "../gamelib-js/gamelib.js";
+const url = new URL(import.meta.url);
+url.pathname = "/gamelib-js/gamelib.js";
+const { default: $ } = await import(url);
 
 const SCREEN_WIDTH = 640;
 const SCREEN_HEIGHT = 480;
@@ -313,14 +315,14 @@ const game = new $.Game({
 $.register({
   game,
   audios: {
-    gameStart: "resources/魔王魂 効果音 システム49.mp3",
-    gameOver: "resources/魔王魂 効果音 システム32.mp3",
-    flap: "resources/maou_se_sound17.mp3",
-    gain: "resources/魔王魂 効果音 物音15.mp3",
-    ranking: "resources/魔王魂 効果音 システム46.mp3",
+    gameStart: new URL("resources/魔王魂 効果音 システム49.mp3", import.meta.url),
+    gameOver: new URL("resources/魔王魂 効果音 システム32.mp3", import.meta.url),
+    flap: new URL("resources/maou_se_sound17.mp3", import.meta.url),
+    gain: new URL("resources/魔王魂 効果音 物音15.mp3", import.meta.url),
+    ranking: new URL("resources/魔王魂 効果音 システム46.mp3", import.meta.url),
   },
-  font: "resources/PressStart2P-Regular.ttf",
-  image: "resources/echolocation.png",
+  font: new URL("resources/PressStart2P-Regular.ttf", import.meta.url),
+  image: new URL("resources/echolocation.png", import.meta.url),
   key: ((r) =>
     Array(32)
       .fill(0)
