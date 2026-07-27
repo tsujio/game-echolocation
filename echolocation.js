@@ -1,6 +1,4 @@
-const url = new URL(import.meta.url);
-url.pathname = "/gamelib-js/gamelib.js";
-const { default: $ } = await import(url);
+const { default: $ } = await import(Object.assign(new URL(import.meta.url), { pathname: "/gamelib-js/gamelib.js"}));
 
 const SCREEN_WIDTH = 640;
 const SCREEN_HEIGHT = 480;
@@ -283,10 +281,10 @@ const game = new $.Game({
 
   drawMode: {
     title: function (ctx) {
-      $.drawText(ctx, { text: "ECHOLOCATION", x: SCREEN_WIDTH / 2, y: 80, size: 36, align: "center", color: "white" });
-      $.drawText(ctx, { text: "[TAP] Flap", x: SCREEN_WIDTH / 2, y: 180, size: 14, align: "center", color: "white" });
+      $.drawText(ctx, { text: "ECHOLOCATION", x: SCREEN_WIDTH / 2, y: 80, size: 42, align: "center", color: "white" });
+      $.drawText(ctx, { text: "[TAP] Flap", x: SCREEN_WIDTH / 2, y: 230, size: 20, align: "center", color: "white" });
       ["CREATOR: NAOKI TSUJIO", "FONT: Press Start 2P by CodeMan38", "SOUND EFFECT: MaouDamashii"].forEach((s, i) => {
-        $.drawText(ctx, { text: s, x: SCREEN_WIDTH / 2, y: 300 + 18 * i, size: 12, align: "center", color: "white" });
+        $.drawText(ctx, { text: s, x: SCREEN_WIDTH / 2, y: 380 + 24 * i, size: 14, align: "center", color: "white" });
       });
     },
 
@@ -296,10 +294,9 @@ const game = new $.Game({
 
     gameOver: function (ctx) {
       drawScore(ctx, this.gamePlay.score);
-      $.drawText(ctx, { text: "GAME OVER", x: SCREEN_WIDTH / 2, y: 80, size: 36, align: "center", color: "white" });
-      ["YOUR SCORE IS", `${this.gamePlay.score}!`]?.forEach((s, i) => {
-        $.drawText(ctx, { text: s, x: SCREEN_WIDTH / 2, y: 160 + 42 * i, size: 18, align: "center", color: "white" });
-      });
+      $.drawText(ctx, { text: "GAME OVER", x: SCREEN_WIDTH / 2, y: 160, size: 42, align: "center", color: "white" });
+      $.drawText(ctx, { text: "YOUR SCORE IS", x: SCREEN_WIDTH / 2, y: 260, size: 20, align: "center", color: "white" });
+      $.drawText(ctx, { text: `${this.gamePlay.score}!`, x: SCREEN_WIDTH / 2, y: 310, size: 28, align: "center", color: "white" });
     },
 
     ranking: function (ctx) {
@@ -314,15 +311,16 @@ const game = new $.Game({
 
 $.register({
   game,
+  resourceBaseUrl: new URL("resources/", import.meta.url),
   audios: {
-    gameStart: new URL("resources/魔王魂 効果音 システム49.mp3", import.meta.url),
-    gameOver: new URL("resources/魔王魂 効果音 システム32.mp3", import.meta.url),
-    flap: new URL("resources/maou_se_sound17.mp3", import.meta.url),
-    gain: new URL("resources/魔王魂 効果音 物音15.mp3", import.meta.url),
-    ranking: new URL("resources/魔王魂 効果音 システム46.mp3", import.meta.url),
+    gameStart: "魔王魂 効果音 システム49.mp3",
+    gameOver: "魔王魂 効果音 システム32.mp3",
+    flap: "maou_se_sound17.mp3",
+    gain: "魔王魂 効果音 物音15.mp3",
+    ranking: "魔王魂 効果音 システム46.mp3",
   },
-  font: new URL("resources/PressStart2P-Regular.ttf", import.meta.url),
-  image: new URL("resources/echolocation.png", import.meta.url),
+  font: "PressStart2P-Regular.ttf",
+  image: "echolocation.png",
   key: ((r) =>
     Array(32)
       .fill(0)
