@@ -281,10 +281,6 @@ function GamePlay({ game, demo }) {
   };
 }
 
-const drawScore = (ctx, score) => {
-  $.drawText(ctx, { text: score, x: SCREEN_WIDTH, y: 0, size: 24, align: "right", color: "white" });
-};
-
 const game = new $.Game({
   title: "echolocation",
   screen: {
@@ -303,11 +299,11 @@ const game = new $.Game({
     },
 
     playing: function (ctx) {
-      drawScore(ctx, this.gamePlay.score);
+      this.drawScore(ctx, { color: "white" });
     },
 
     gameOver: function (ctx) {
-      drawScore(ctx, this.gamePlay.score);
+      this.drawScore(ctx, { color: "white" });
       $.drawText(ctx, { text: "GAME OVER", x: SCREEN_WIDTH / 2, y: 160, size: 42, align: "center", color: "white" });
       $.drawText(ctx, {
         text: "YOUR SCORE IS",
@@ -328,7 +324,7 @@ const game = new $.Game({
     },
 
     ranking: function (ctx) {
-      drawScore(ctx, this.gamePlay.score);
+      this.drawScore(ctx, { color: "white" });
       this.drawRanking(ctx, {
         backgroundColor: "rgb(255 255 255 / 0.7)",
         textColor: "black",
