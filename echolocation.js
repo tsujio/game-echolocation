@@ -1,4 +1,4 @@
-const { default: $ } = await import(Object.assign(new URL(import.meta.url), { pathname: "/gamelib-js/gamelib.js"}));
+const { default: $ } = await import(new URL("/gamelib-js/gamelib.js", import.meta.url));
 
 const SCREEN_WIDTH = 640;
 const SCREEN_HEIGHT = 480;
@@ -65,7 +65,8 @@ function EchoParticle({ x, y, vx, vy }) {
   };
 
   this.draw = function (ctx) {
-    $.drawCircle(ctx, { x: this.x, y: this.y, radius: 2, color: `rgb(255 255 0 / ${this.reflect < 1 ? 0.7 : 0.2})` });
+    const a = this.reflect < 1 ? 0.7 : 0.1;
+    $.drawCircle(ctx, { x: this.x, y: this.y, radius: 4, color: `rgb(255 255 0 / ${a})` });
   };
 }
 
@@ -143,6 +144,7 @@ function GamePlay({ game, demo }) {
   this.enemies = [];
   this.coins = [];
   this.gainEffects = [];
+  this.brightTicks = { start: 30, end: 660, scale: 0.005 };
   if (demo) {
     this.touchSimulation = new $.TouchSimulation().wait(30).touch().release().wait(125).touch().release();
   }
@@ -165,7 +167,8 @@ function GamePlay({ game, demo }) {
       }
     }
 
-    const freq = this.ticks < 60 * 30 ? 120 : this.ticks < 60 * 60 ? 90 : 60;
+    const freq =
+      this.ticks < 60 * 30 ? 120 : this.ticks < 60 * 60 ? 90 : Math.max(30, Math.floor(60 - (this.ticks / 60 - 60)));
     if (this.ticks % freq === 0) {
       this.enemies.push(
         new Enemy({
@@ -231,6 +234,7 @@ function GamePlay({ game, demo }) {
           }),
         );
         this.score += 1;
+        this.brightTicks = { start: this.ticks, end: this.ticks + 180, scale: 0.01 };
         if (!demo) {
           $.playAudio("gain");
         }
@@ -246,12 +250,22 @@ function GamePlay({ game, demo }) {
   };
 
   const drawDarkness = (ctx) => {
+    let brightness = 0;
+    if (this.gameOver) {
+      brightness = 1.0;
+    } else if (this.ticks < this.brightTicks.end) {
+      const t = (this.ticks - this.brightTicks.start) * this.brightTicks.scale;
+      brightness = t * Math.exp(-t);
+      brightness *= Math.exp(1);
+    }
+    brightness *= 0.7;
+
     ctx.save();
     ctx.beginPath();
     ctx.rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     ctx.arc(this.bat.x, this.bat.y, 50, 0, Math.PI * 2);
     ctx.clip("evenodd");
-    ctx.fillStyle = "rgba(0, 0, 0)";
+    ctx.fillStyle = `rgba(0, 0, 0, ${1 - brightness})`;
     ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     ctx.restore();
   };
@@ -295,8 +309,22 @@ const game = new $.Game({
     gameOver: function (ctx) {
       drawScore(ctx, this.gamePlay.score);
       $.drawText(ctx, { text: "GAME OVER", x: SCREEN_WIDTH / 2, y: 160, size: 42, align: "center", color: "white" });
-      $.drawText(ctx, { text: "YOUR SCORE IS", x: SCREEN_WIDTH / 2, y: 260, size: 20, align: "center", color: "white" });
-      $.drawText(ctx, { text: `${this.gamePlay.score}!`, x: SCREEN_WIDTH / 2, y: 310, size: 28, align: "center", color: "white" });
+      $.drawText(ctx, {
+        text: "YOUR SCORE IS",
+        x: SCREEN_WIDTH / 2,
+        y: 260,
+        size: 20,
+        align: "center",
+        color: "white",
+      });
+      $.drawText(ctx, {
+        text: `${this.gamePlay.score}!`,
+        x: SCREEN_WIDTH / 2,
+        y: 310,
+        size: 28,
+        align: "center",
+        color: "white",
+      });
     },
 
     ranking: function (ctx) {
@@ -311,16 +339,18 @@ const game = new $.Game({
 
 $.register({
   game,
-  resourceBaseUrl: new URL("resources/", import.meta.url),
-  audios: {
-    gameStart: "魔王魂 効果音 システム49.mp3",
-    gameOver: "魔王魂 効果音 システム32.mp3",
-    flap: "maou_se_sound17.mp3",
-    gain: "魔王魂 効果音 物音15.mp3",
-    ranking: "魔王魂 効果音 システム46.mp3",
+  resources: {
+    baseUrl: new URL("resources/", import.meta.url),
+    audios: {
+      gameStart: "魔王魂 効果音 システム49.mp3",
+      gameOver: "魔王魂 効果音 システム32.mp3",
+      flap: "maou_se_sound17.mp3",
+      gain: "魔王魂 効果音 物音15.mp3",
+      ranking: "魔王魂 効果音 システム46.mp3",
+    },
+    font: "PressStart2P-Regular.ttf",
+    image: "echolocation.png",
   },
-  font: "PressStart2P-Regular.ttf",
-  image: "echolocation.png",
   key: ((r) =>
     Array(32)
       .fill(0)
