@@ -145,9 +145,8 @@ function GamePlay({ game, demo }) {
   this.coins = [];
   this.gainEffects = [];
   this.brightTicks = { start: 30, end: 660, scale: 0.005 };
-  if (demo) {
-    this.touchSimulation = new $.TouchSimulation().wait(30).touch().release().wait(125).touch().release();
-  }
+
+  const touchSimulation = new $.TouchSimulation().wait(30).touch().release().wait(125).touch().release();
 
   this.update = function (touches) {
     if (this.gameOver) {
@@ -157,7 +156,7 @@ function GamePlay({ game, demo }) {
     this.ticks++;
 
     if (demo) {
-      touches = this.touchSimulation.next();
+      touches = touchSimulation.next();
     }
 
     if ($.firstTouchStarted(touches)) {
@@ -331,6 +330,11 @@ const game = new $.Game({
       });
     },
   },
+
+  bgm: {
+    loop: { start: 0, end: 56.0 },
+    gain: 0.7,
+  },
 });
 
 $.register({
@@ -343,6 +347,7 @@ $.register({
       flap: "maou_se_sound17.mp3",
       gain: "魔王魂 効果音 物音15.mp3",
       ranking: "魔王魂 効果音 システム46.mp3",
+      bgm: "bgm-echolocation.m4a",
     },
     font: "PressStart2P-Regular.ttf",
     image: "echolocation.png",
